@@ -1,0 +1,3 @@
+﻿<costumes anm2root="gfx/characters/">
+	<costume anm2path="keepers rope.anm2" type="passive" isFlying="true" hasSkinAlt="true" priority="99" />
+</costumes>
