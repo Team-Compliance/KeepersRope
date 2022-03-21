@@ -147,23 +147,15 @@ function mod:MoneyMoneyMoneyMoney(entity, _, damageflags, source)
 				if data.CoinsToBeat > 0 then
 					for i = 0, game:GetNumPlayers() - 1 do
 						local player = game:GetPlayer(i)
+						local pickup = {Variant = PickupVariant.PICKUP_COIN, SubType = CoinSubType.COIN_PENNY}
 						local ropeRNG = player:GetCollectibleRNG(CollectibleType.COLLECTIBLE_KEEPERS_ROPE):RandomInt(3)
 						local vector = Vector(math.random(1,3) * (math.random(1,2) == 1 and 1 or -1), math.random(1,3) * (math.random(1,2) == 1 and 1 or -1))
-						if player:HasCollectible(CollectibleType.COLLECTIBLE_DADS_KEY) then
-							if ropeRNG == 0 then
-								Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_KEY, KeySubType.KEY_NORMAL, entity.Position, vector, nil)
-							else
-								Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COIN, CoinSubType.COIN_PENNY, entity.Position, vector, nil)
-							end
-						elseif player:HasCollectible(CollectibleType.COLLECTIBLE_MR_BOOM) then
-							if ropeRNG == 0 then
-								Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BOMB, BombSubType.BOMB_NORMAL, entity.Position, vector, nil)
-							else
-								Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COIN, CoinSubType.COIN_PENNY, entity.Position, vector, nil)
-							end
-						else
-							Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COIN, CoinSubType.COIN_PENNY, entity.Position, vector, nil)
+						if player:HasCollectible(CollectibleType.COLLECTIBLE_DADS_KEY) and ropeRNG == 0 then
+							pickup = {Variant = PickupVariant.PICKUP_KEY, SubType = KeySubType.KEY_NORMAL}
+						elseif player:HasCollectible(CollectibleType.COLLECTIBLE_MR_BOOM) and ropeRNG == 0 then
+							pickup = {Variant = PickupVariant.PICKUP_BOMB, SubType = BombSubType.BOMB_NORMAL}
 						end
+						Isaac.Spawn(EntityType.ENTITY_PICKUP, pickup.Variant, pickup.SubType, entity.Position, vector, nil):ToPickup().Timeout = 90
 						data.CoinsToBeat = data.CoinsToBeat - 1
 					end
 				end
@@ -187,23 +179,26 @@ function mod:DollarDollar(npc)
 		for i = 1, data.CoinsToBeat do
 			for i = 0, game:GetNumPlayers() - 1 do
 				local player = game:GetPlayer(i)
+				local ropeRNG = player:GetCollectibleRNG(CollectibleType.COLLECTIBLE_KEEPERS_ROPE):RandomInt(3)
+				local pickup
 				local vector = Vector(math.random(1,3) * (math.random(1,2) == 1 and 1 or -1), math.random(1,3) * (math.random(1,2) == 1 and 1 or -1))
 				if player:HasCollectible(CollectibleType.COLLECTIBLE_DADS_KEY) then
 					if ropeRNG == 0 then
-						Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_KEY, KeySubType.KEY_NORMAL, npc.Position, vector, nil)
+						pickup = Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_KEY, KeySubType.KEY_NORMAL, npc.Position, vector, nil):ToPickup()
 					else
-						Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COIN, CoinSubType.COIN_PENNY, npc.Position, vector, nil)
+						pickup = Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COIN, CoinSubType.COIN_PENNY, npc.Position, vector, nil):ToPickup()
 					end
 				elseif player:HasCollectible(CollectibleType.COLLECTIBLE_MR_BOOM) then
 					if ropeRNG == 0 then
-						Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BOMB, BombSubType.BOMB_NORMAL, npc.Position, vector, nil)
+						pickup = Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BOMB, BombSubType.BOMB_NORMAL, npc.Position, vector, nil):ToPickup()
 					else
-						Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COIN, CoinSubType.COIN_PENNY, npc.Position, vector, nil)
+						pickup = Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COIN, CoinSubType.COIN_PENNY, npc.Position, vector, nil):ToPickup()
 					end
 				else
-					Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COIN, CoinSubType.COIN_PENNY, npc.Position, vector, nil)
+					pickup = Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COIN, CoinSubType.COIN_PENNY, npc.Position, vector, nil):ToPickup()
 				end
 				data.CoinsToBeat = data.CoinsToBeat - 1
+				pickup.Timeout = 90
 			end
 		end
 	end
