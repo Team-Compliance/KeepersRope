@@ -112,7 +112,12 @@ function mod:RopeUpdate(rope)
 		rope:Remove()
 	else
 		local sprite = player:GetSprite()
-		sprite:Stop()
+		if sprite:IsPlaying("WalkLeft") or sprite:IsPlaying("WalkRight")
+		or sprite:IsPlaying("WalkUp") or sprite:IsPlaying("WalkDown") 
+		or sprite:IsPlaying("PickupWalkLeft") or sprite:IsPlaying("PickupWalkRight")
+		or sprite:IsPlaying("PickupWalkUp") or sprite:IsPlaying("PickupWalkDown")then
+			sprite:Stop()
+		end
 	end
 end
 mod:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, mod.RopeUpdate, KeepersRope.Variant)
