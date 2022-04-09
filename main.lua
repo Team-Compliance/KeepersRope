@@ -12,9 +12,9 @@ coinIndicator.Scale = Vector(0.8, 0.8)
 --EID Compatibility 
 
 if EID then
-	local KeepersRopeDescEng = "Grants flight#Upon entering a room, monsters have a 50% chance to contain 1-5 pennies which can extracted by damaging them#{{Player14}} When playing as Keeper monsters have 25% chance to contain 1-3 pennies#{{Player33}} When playing as Tainted Keeper monsters have 12.5% chance to contain 1 penny"
-	local KeepersRopeDescRu = "Даёт полёт#Когда вы заходите в комнату, у монстров есть 50% шанс иметь 1-5 монет, которые выпадают при нанесении им урона#{{Player14}} При игре за Хранителя у монстров есть 25% шанс иметь 1-3 монеты#{{Player33}} При игре за Порченого Хранителя у монстров есть 12.5% шанс иметь 1 монету"
-	local KeepersRopeDescSpa = "Puedes volar#Al entrar a una sala, los enemigos tienen un 50% de posibilidad de tener 1-5 monedas#Las puedes obtener al hacerles daño#{{Player14}} Con Keeper los enemigos tendrán un 25% de posibilidad de tener 1-3 monedas#{{Player33}} Con Keeper Contaminado los enemigos tendrán un 12.5% de tener 1 moneda"
+	local KeepersRopeDescEng = "Grants flight#When monsters spawn they have a 25% chance to contain 1-3 pennies which can extracted by damaging them#{{Player14}} When playing as Keeper monsters have 25% chance to contain 1-2 pennies#{{Player33}} When playing as Tainted Keeper monsters have 12.5% chance to contain 1 penny#!!! The pennies disappear after 3 seconds"
+	local KeepersRopeDescRu = "Даёт полёт#Когда монстры появляются у них есть 25% шанс иметь 1-3 монет, которые выпадают при нанесении им урона#{{Player14}} При игре за Хранителя у монстров есть 25% шанс иметь 1-2 монеты#{{Player33}} При игре за Порченого Хранителя у монстров есть 12.5% шанс иметь 1 монету#!!! Монеты исчезают через 3 секунды"
+	local KeepersRopeDescSpa = "Puedes volar#Al entrar a una sala, los enemigos tienen un 25% de posibilidad de tener 1-5 monedas#Las puedes obtener al hacerles daño#{{Player14}} Con Keeper los enemigos tendrán un 25% de posibilidad de tener 1-3 monedas#{{Player33}} Con Keeper Contaminado los enemigos tendrán un 12.5% de tener 1 moneda"
     EID:addCollectible(CollectibleType.COLLECTIBLE_KEEPERS_ROPE, KeepersRopeDescEng, "Keeper's Rope")
     EID:addCollectible(CollectibleType.COLLECTIBLE_KEEPERS_ROPE, KeepersRopeDescRu, "Веревка Хранителя", "ru")
 	EID:addCollectible(CollectibleType.COLLECTIBLE_KEEPERS_ROPE, KeepersRopeDescSpa, "La soga de Keeper", "spa")
@@ -26,8 +26,9 @@ local Wiki = {
     { -- Effect
       {str = "Effect", fsize = 2, clr = 3, halign = 0},
       {str = "Grants flight."},
-      {str = "Upon entering a room, monsters have a 50% chance to contain 1-5 pennies within them."},
+      {str = "When monsters spawn they have a 25% chance to contain 1-3 pennies."},
       {str = "The pennies can be extracted by inflicting damage on the monsters."},
+      {str = "The pennies disappear after 3 seconds."},
     },
 	{ -- Notes
       {str = "Notes", fsize = 2, clr = 3, halign = 0},
@@ -123,26 +124,28 @@ end
 mod:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, mod.RopeUpdate, KeepersRope.Variant)
 
 
-function mod:HereComesTheMoney()
+function mod:HereComesTheMoney(npc)
+	if npc.SpawnerEntity ~= nil then return end
 	local room = game:GetRoom()
+	local rng = RNG()
+	rng:SetSeed(room:GetDecorationSeed() + npc.InitSeed,35)
 	for _, e in ipairs(Isaac.FindByType(EntityType.ENTITY_PLAYER)) do
 		local player = e:ToPlayer()
-		if player:HasCollectible(CollectibleType.COLLECTIBLE_KEEPERS_ROPE) and room:IsFirstVisit() then
-			local rng = player:GetCollectibleRNG(CollectibleType.COLLECTIBLE_KEEPERS_ROPE)
-			for _, entity in ipairs(Isaac.GetRoomEntities()) do
-				local isKeeper = player:GetPlayerType() == PlayerType.PLAYER_KEEPER
-				local isTaintedKeeper = player:GetPlayerType() == PlayerType.PLAYER_KEEPER_B
-				local chance = isTaintedKeeper and 8 or (isKeeper and 4 or 2)
-				local coins = isTaintedKeeper and 1 or (isKeeper and 3 or 5)
-				if entity:IsVulnerableEnemy() and rng:RandomInt(chance) == 1 then
-					local entityData = piberFuncs.GetData(entity)
-					entityData.CoinsToBeat = player:GetCollectibleRNG(CollectibleType.COLLECTIBLE_KEEPERS_ROPE):RandomInt(coins) + 1
-				end
+		if player:HasCollectible(CollectibleType.COLLECTIBLE_KEEPERS_ROPE) then
+			local isKeeper = player:GetPlayerType() == PlayerType.PLAYER_KEEPER
+			local isTaintedKeeper = player:GetPlayerType() == PlayerType.PLAYER_KEEPER_B
+			local chance = isTaintedKeeper and 8 or (isKeeper and 6 or 4)
+			local coins = isTaintedKeeper and 1 or (isKeeper and 2 or 3)
+			if npc:IsVulnerableEnemy() and rng:RandomInt(chance + npc.InitSeed % chance) == 1 then
+				local entityData = piberFuncs.GetData(npc)
+				local mul = npc:IsBoss() and 2 or 1
+				entityData.CoinsToBeat = (rng:RandomInt(coins + 1)) * mul
+				if entityData.CoinsToBeat == 0 then entityData.CoinsToBeat = nil end
 			end
 		end
 	end
 end
-mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, mod.HereComesTheMoney)
+mod:AddCallback(ModCallbacks.MC_POST_NPC_INIT, mod.HereComesTheMoney)
 
 function mod:MoneyMoneyMoneyMoney(entity, _, damageflags, source)
 	if source.Type > 0 and damageflags & DamageFlag.DAMAGE_NOKILL ~= DamageFlag.DAMAGE_NOKILL then
