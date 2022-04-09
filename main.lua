@@ -27,28 +27,30 @@ local Wiki = {
       {str = "Effect", fsize = 2, clr = 3, halign = 0},
       {str = "Grants flight."},
       {str = "When monsters spawn they have a 25% chance to contain 1-3 pennies."},
+      {str = "When playing as Keeper monsters have 25% chance to contain 1-2 pennies"},
+      {str = "When playing as Tainted Keeper monsters have 12.5% chance to contain 1 penny"},
       {str = "The pennies can be extracted by inflicting damage on the monsters."},
       {str = "The pennies disappear after 3 seconds."},
     },
-	{ -- Notes
+    { -- Notes
       {str = "Notes", fsize = 2, clr = 3, halign = 0},
       {str = "Monsters containing pennies are indicated by a transluscent penny hovering over their heads."},
-	  {str = "This item has a chance of spawning after blowing up a shopkeeper, similarly to Head of the Keeper, Steam Sale, and Coupon."},
+      {str = "This item has a chance of spawning after blowing up a shopkeeper, similarly to Head of the Keeper, Steam Sale, and Coupon."},
     },
-	{ -- Synergies
-		{str = "Synergies", fsize = 2, clr = 3, halign = 0},
-		{str = "Dad's Key: Dropped coins have a 33% chance to be replaced with keys."},
-		{str = "Mr. Boom: Dropped coins have a 33% chance to be replaced with bombs."},
-		{str = "Crooked Penny: Dropped coins have a 50% chance to be doubled."},
-		{str = "Humbling Bundle: Dropped coins, bombs, and keys have a 50% chance to be doubled."},
-		{str = "BOGO Bombs: Dropped bombs from the Mr. Boom synergy have a 100% chance to be doubled."},
-		},
+    { -- Synergies
+      {str = "Synergies", fsize = 2, clr = 3, halign = 0},
+      {str = "Dad's Key: Dropped coins have a 33% chance to be replaced with keys."},
+      {str = "Mr. Boom: Dropped coins have a 33% chance to be replaced with bombs."},
+      {str = "Crooked Penny: Dropped coins have a 50% chance to be doubled."},
+      {str = "Humbling Bundle: Dropped coins, bombs, and keys have a 50% chance to be doubled."},
+      {str = "BOGO Bombs: Dropped bombs from the Mr. Boom synergy have a 100% chance to be doubled."},
+    },
     { -- Trivia
       {str = "Trivia", fsize = 2, clr = 3, halign = 0},
       {str = "Keeper's Rope was one of the few cancelled items that was originally planned to be in Repentance."},
-	  {str = "According to its unlock paper sprite, Keeper's Rope was supposed to look similar to the item Transendence, so similar in fact that Team Compliance decided to edit it in order to avoid potential confusion."},
-	  {str = "The original Keeper's Rope mod was made by Akad!"},
-	  {str = "This mod was primarily coded by BrakeDude!"},
+      {str = "According to its unlock paper sprite, Keeper's Rope was supposed to look similar to the item Transendence, so similar in fact that Team Compliance decided to edit it in order to avoid potential confusion."},
+      {str = "The original Keeper's Rope mod was made by Akad!"},
+      {str = "This mod was primarily coded by BrakeDude!"},
     },
   }
 }
