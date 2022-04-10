@@ -152,22 +152,20 @@ mod:AddCallback(ModCallbacks.MC_POST_NPC_INIT, mod.HereComesTheMoney)
 function mod:MoneyMoneyMoneyMoney(entity, _, damageflags, source)
 	if source.Type > 0 and damageflags & DamageFlag.DAMAGE_NOKILL ~= DamageFlag.DAMAGE_NOKILL then
 		local data = piberFuncs.GetData(entity)
-		if entity:IsVulnerableEnemy() and data.CoinsToBeat then
-			for i = 1, math.random(1,2) do
-				if data.CoinsToBeat > 0 then
-					for i = 0, game:GetNumPlayers() - 1 do
-						local player = game:GetPlayer(i)
-						local pickup = {Variant = PickupVariant.PICKUP_COIN, SubType = CoinSubType.COIN_PENNY}
-						local ropeRNG = player:GetCollectibleRNG(CollectibleType.COLLECTIBLE_KEEPERS_ROPE):RandomInt(3)
-						local vector = Vector(math.random(1,3) * (math.random(1,2) == 1 and 1 or -1), math.random(1,3) * (math.random(1,2) == 1 and 1 or -1))
-						if player:HasCollectible(CollectibleType.COLLECTIBLE_DADS_KEY) and ropeRNG == 0 then
-							pickup = {Variant = PickupVariant.PICKUP_KEY, SubType = KeySubType.KEY_NORMAL}
-						elseif player:HasCollectible(CollectibleType.COLLECTIBLE_MR_BOOM) and ropeRNG == 0 then
-							pickup = {Variant = PickupVariant.PICKUP_BOMB, SubType = BombSubType.BOMB_NORMAL}
-						end
-						Isaac.Spawn(EntityType.ENTITY_PICKUP, pickup.Variant, pickup.SubType, entity.Position, vector, nil):ToPickup().Timeout = 90
-						data.CoinsToBeat = data.CoinsToBeat - 1
+		if entity:IsVulnerableEnemy() and data.CoinsToBeat then			
+			if data.CoinsToBeat > 0 then
+				for i = 0, game:GetNumPlayers() - 1 do
+					local player = game:GetPlayer(i)
+					local pickup = {Variant = PickupVariant.PICKUP_COIN, SubType = CoinSubType.COIN_PENNY}
+					local ropeRNG = player:GetCollectibleRNG(CollectibleType.COLLECTIBLE_KEEPERS_ROPE):RandomInt(3)
+					local vector = Vector(math.random(1,3) * (math.random(1,2) == 1 and 1 or -1), math.random(1,3) * (math.random(1,2) == 1 and 1 or -1))
+					if player:HasCollectible(CollectibleType.COLLECTIBLE_DADS_KEY) and ropeRNG == 0 then
+						pickup = {Variant = PickupVariant.PICKUP_KEY, SubType = KeySubType.KEY_NORMAL}
+					elseif player:HasCollectible(CollectibleType.COLLECTIBLE_MR_BOOM) and ropeRNG == 0 then
+						pickup = {Variant = PickupVariant.PICKUP_BOMB, SubType = BombSubType.BOMB_NORMAL}
 					end
+					Isaac.Spawn(EntityType.ENTITY_PICKUP, pickup.Variant, pickup.SubType, entity.Position, vector, nil):ToPickup().Timeout = 90
+					data.CoinsToBeat = data.CoinsToBeat - 1
 				end
 			end
 		end
