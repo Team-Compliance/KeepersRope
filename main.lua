@@ -138,7 +138,7 @@ function mod:HereComesTheMoney(npc)
 			local isTaintedKeeper = player:GetPlayerType() == PlayerType.PLAYER_KEEPER_B
 			local chance = isTaintedKeeper and 8 or (isKeeper and 6 or 4)
 			local coins = isTaintedKeeper and 1 or (isKeeper and 2 or 3)
-			if npc:IsVulnerableEnemy() and rng:RandomInt(chance + npc.InitSeed % chance) == 1 then
+			if npc:IsVulnerableEnemy() and npc:IsActiveEnemy(false) and rng:RandomInt(chance + npc.InitSeed % chance) == 1 then
 				local entityData = piberFuncs.GetData(npc)
 				local mul = npc:IsBoss() and 2 or 1
 				entityData.CoinsToBeat = (rng:RandomInt(coins + 1)) * mul
