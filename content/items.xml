@@ -1,3 +1,3 @@
-<items gfxroot="gfx/items/" version="1">
-        <passive description="Beat the money out of them" gfx="keepers_rope.png" cache="flying" name="Keeper's Rope" />
+<items gfxroot="gfx/items/" version="1" deathanm2="gfx/death items.anm2">
+        <passive id="1" description="Beat the money out of them" gfx="keepers_rope.png" cache="flying" name="Keeper's Rope" />
 </items>

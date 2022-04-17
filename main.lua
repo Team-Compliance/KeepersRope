@@ -75,6 +75,36 @@ if MiniMapiItemsAPI then
     MiniMapiItemsAPI:AddCollectible(CollectibleType.COLLECTIBLE_KEEPERS_ROPE, keepersropeSprite, "CustomIconKeepersRope", frame)
 end
 
+local NoCoinList = {
+	{EntityType.ENTITY_STONEHEAD},
+	{EntityType.ENTITY_POKY},
+	{EntityType.ENTITY_MASK},
+	{EntityType.ENTITY_ETERNALFLY},
+	{EntityType.ENTITY_STONE_EYE},
+	{EntityType.ENTITY_CONSTANT_STONE_SHOOTER},
+	{EntityType.ENTITY_BRIMSTONE_HEAD},
+	{EntityType.ENTITY_DEATHS_HEAD,0},
+	{EntityType.ENTITY_DEATHS_HEAD,2},
+	{EntityType.ENTITY_DEATHS_HEAD,3},
+	{EntityType.ENTITY_WALL_HUGGER},
+	{EntityType.ENTITY_GAPING_MAW},
+	{EntityType.ENTITY_BROKEN_GAPING_MAW},
+	{EntityType.ENTITY_PITFALL},
+	{EntityType.ENTITY_CORN_MINE},
+	{EntityType.ENTITY_STONEY},
+	{EntityType.ENTITY_PORTAL},
+	{EntityType.ENTITY_BLOOD_PUPPY},
+	{EntityType.ENTITY_QUAKE_GRIMACE},
+	{EntityType.ENTITY_BOMB_GRIMACE},
+	{EntityType.ENTITY_FISSURE},
+	{EntityType.ENTITY_SPIKEBALL},
+	{EntityType.ENTITY_SMALL_MAGGOT},
+	{EntityType.ENTITY_MOCKULUS},
+	{EntityType.ENTITY_GRUDGE},
+	{EntityType.ENTITY_DUSTY_DEATHS_HEAD},
+	{EntityType.ENTITY_SINGE,1}
+}
+
 --Functionality Code
 local function GetRope(player,bool)
 	bool = bool or false
@@ -88,12 +118,15 @@ local function GetRope(player,bool)
 end
 
 function mod:Rope(player)
-	if player:HasCollectible(CollectibleType.COLLECTIBLE_KEEPERS_ROPE) then
-		if not GetRope(player, true) then
-			Isaac.Spawn(KeepersRope.Id, KeepersRope.Variant, 0, player.Position, Vector.Zero, player)
-		else
-			local rope = GetRope(player)
-			rope.Position = player.Position + Vector(0, -2.5)
+	local BeastFight = game:GetLevel():GetAbsoluteStage() == LevelStage.STAGE8 and game:GetRoom():GetType() == RoomType.ROOM_DUNGEON
+	if not BeastFight then
+		if player:HasCollectible(CollectibleType.COLLECTIBLE_KEEPERS_ROPE) then
+			if not GetRope(player, true) then
+				Isaac.Spawn(KeepersRope.Id, KeepersRope.Variant, 0, player.Position, Vector.Zero, player)
+			else
+				local rope = GetRope(player)
+				rope.Position = player.Position + Vector(0, -2.5)
+			end
 		end
 	end
 end
@@ -106,7 +139,8 @@ end
 mod:AddCallback(ModCallbacks.MC_POST_EFFECT_INIT, mod.RopeInit, KeepersRope.Variant)
 
 function mod:RopeUpdate(rope)
-	if not rope.SpawnerEntity:Exists() or rope.SpawnerType ~= EntityType.ENTITY_PLAYER then
+	local BeastFight = game:GetLevel():GetAbsoluteStage() == LevelStage.STAGE8 and game:GetRoom():GetType() == RoomType.ROOM_DUNGEON
+	if not rope.SpawnerEntity:Exists() or rope.SpawnerType ~= EntityType.ENTITY_PLAYER or BeastFight then
 		rope:Remove()
 	end
 	local player = rope.SpawnerEntity:ToPlayer()
@@ -125,9 +159,26 @@ function mod:RopeUpdate(rope)
 end
 mod:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, mod.RopeUpdate, KeepersRope.Variant)
 
+local function DontGiveCoins(npc)
+	if npc.Type >= 950 and npc.Type < 1000 then
+		return true
+	end
+	for _,entity in pairs(NoCoinList) do
+		if entity[1] == npc.Type then
+			if entity[2] then
+				if entity[2] == npc.Variant then
+					return true
+				end	
+			else
+				return true
+			end
+		end
+	end
+	return false
+end
 
 function mod:HereComesTheMoney(npc)
-	if npc.SpawnerEntity ~= nil then return end
+	if npc.SpawnerEntity ~= nil or game:GetLevel():GetAbsoluteStage() == LevelStage.STAGE8 or DontGiveCoins(npc) then return end
 	local room = game:GetRoom()
 	local rng = RNG()
 	rng:SetSeed(room:GetDecorationSeed() + npc.InitSeed,35)
@@ -138,7 +189,7 @@ function mod:HereComesTheMoney(npc)
 			local isTaintedKeeper = player:GetPlayerType() == PlayerType.PLAYER_KEEPER_B
 			local chance = isTaintedKeeper and 8 or (isKeeper and 6 or 4)
 			local coins = isTaintedKeeper and 1 or (isKeeper and 2 or 3)
-			if npc:IsVulnerableEnemy() and npc:IsActiveEnemy(false) and rng:RandomInt(chance + npc.InitSeed % chance) == 1 then
+			if npc:IsEnemy() and npc:IsVulnerableEnemy() and npc:IsActiveEnemy(false) and rng:RandomInt(chance + npc.InitSeed % chance) == 1 then
 				local entityData = piberFuncs.GetData(npc)
 				local mul = npc:IsBoss() and 2 or 1
 				entityData.CoinsToBeat = (rng:RandomInt(coins + 1)) * mul
@@ -175,7 +226,10 @@ mod:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, mod.MoneyMoneyMoneyMoney)
 
 function mod:MoneyMoneyMoneyMoneyMoney(npc)
 	local data = piberFuncs.GetData(npc)
-	if data.CoinsToBeat and data.CoinsToBeat > 0 then
+	if data.CoinsToBeat and data.CoinsToBeat > 0 and npc.Visible then
+		local color = Color(1,1,1,1)
+		color:SetColorize(1,1,0,0.6)
+		npc:GetSprite().Color = color
 		coinIndicator:Render((Isaac.WorldToScreen(npc.Position) + Vector(0,-2.3)*(npc.Size <20 and npc.Size or 20) ),Vector.Zero,Vector.Zero)
 	end
 end
