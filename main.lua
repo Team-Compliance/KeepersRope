@@ -102,7 +102,10 @@ local NoCoinList = {
 	{EntityType.ENTITY_MOCKULUS},
 	{EntityType.ENTITY_GRUDGE},
 	{EntityType.ENTITY_DUSTY_DEATHS_HEAD},
-	{EntityType.ENTITY_SINGE,1}
+	{EntityType.ENTITY_SINGE,1},
+	{EntityType.ENTITY_GIDEON},
+	{EntityType.ENTITY_ROTGUT,1},
+	{EntityType.ENTITY_ROTGUT,2}
 }
 
 --Functionality Code
