@@ -119,7 +119,7 @@ end
 
 function mod:Rope(player)
 	local BeastFight = game:GetLevel():GetAbsoluteStage() == LevelStage.STAGE8 and game:GetRoom():GetType() == RoomType.ROOM_DUNGEON
-	if not BeastFight then
+	if not BeastFight and not player:IsDead() then
 		if player:HasCollectible(CollectibleType.COLLECTIBLE_KEEPERS_ROPE) then
 			if not GetRope(player, true) then
 				Isaac.Spawn(KeepersRope.Id, KeepersRope.Variant, 0, player.Position, Vector.Zero, player)
@@ -146,7 +146,7 @@ function mod:RopeUpdate(rope)
 	end
 	local player = rope.SpawnerEntity:ToPlayer()
 	--rope.Position = player.Position
-	if player:HasCollectible(CollectibleType.COLLECTIBLE_KEEPERS_ROPE) == false then
+	if player:HasCollectible(CollectibleType.COLLECTIBLE_KEEPERS_ROPE) == false or player:IsDead() then
 		rope:Remove()
 	else
 		local sprite = player:GetSprite()
