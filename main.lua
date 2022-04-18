@@ -125,7 +125,8 @@ function mod:Rope(player)
 				Isaac.Spawn(KeepersRope.Id, KeepersRope.Variant, 0, player.Position, Vector.Zero, player)
 			else
 				local rope = GetRope(player)
-				rope.Position = player.Position + Vector(0, -2.5)
+				rope.Position = player.Position
+				rope.DepthOffset = -10
 			end
 		end
 	end
