@@ -151,7 +151,8 @@ function mod:RopeUpdate(rope)
 	--rope.Position = player.Position
 	if player:HasCollectible(CollectibleType.COLLECTIBLE_KEEPERS_ROPE) == false or player:IsDead() then
 		rope:Remove()
-	else
+	elseif player:GetPlayerType() ~= PlayerType.PLAYER_THELOST and player:GetPlayerType() ~= PlayerType.PLAYER_THELOST_B
+	and player:GetPlayerType() ~= PlayerType.PLAYER_THESOUL and player:GetPlayerType() ~= PlayerType.PLAYER_THESOUL_B then
 		local sprite = player:GetSprite()
 		if sprite:IsPlaying("WalkLeft") or sprite:IsPlaying("WalkRight")
 		or sprite:IsPlaying("WalkUp") or sprite:IsPlaying("WalkDown") 
