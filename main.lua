@@ -282,8 +282,7 @@ mod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, mod.NoSoap, CacheFlag.CACHE_FLYI
 
 function mod:RopeReplacement(pickup)
     if pickup.FrameCount < 2 and pickup.FrameCount < Game():GetRoom():GetFrameCount() and
-	(pickup.SubType == CollectibleType.COLLECTIBLE_STEAM_SALE or pickup.SubType == CollectibleType.COLLECTIBLE_COUPON
-	or pickup.SubType == CollectibleType.COLLECTIBLE_HEAD_OF_THE_KEEPER) then
+	(pickup.SubType == CollectibleType.COLLECTIBLE_STEAM_SALE or pickup.SubType == CollectibleType.COLLECTIBLE_HEAD_OF_THE_KEEPER) then
         local pickData = piberFuncs.GetData(pickup)
 
         if not pickData.RNG then
