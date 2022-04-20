@@ -1,11 +1,11 @@
-<?xml version="1.1" encoding="UTF-8"?>
+<?xml version="1.2" encoding="UTF-8"?>
 <metadata>
     <name>Keeper's Rope</name>
     <directory>keeper's rope</directory>
     <id>2796513651</id>
     <description></description>
-    <version>1.1</version>
-    <visibility>Friends Only</visibility>
+    <version>1.2</version>
+    <visibility>Public</visibility>
     <tag id="Lua"/>
     <tag id="Items"/>
 </metadata>
