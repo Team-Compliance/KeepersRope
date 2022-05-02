@@ -171,6 +171,9 @@ local function DontGiveCoins(npc)
 	if not npc:IsVulnerableEnemy() then
 		return true
 	end
+	if not npc:IsActiveEnemy(false) then
+		return true
+	end
 	if npc:HasEntityFlags(EntityFlag.FLAG_NO_STATUS_EFFECTS) or npc:HasEntityFlags(EntityFlag.FLAG_FRIENDLY) or npc:HasEntityFlags(EntityFlag.FLAG_PERSISTENT) then
 		return true
 	end
