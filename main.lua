@@ -12,9 +12,9 @@ coinIndicator.Scale = Vector(0.8, 0.8)
 --EID Compatibility 
 
 if EID then
-	local KeepersRopeDescEng = "Grants flight#{{Coin}} When monsters spawn they have a 14%-25% chance to contain 1-3 pennies which can extracted by damaging them#{{Player14}} When playing as Keeper monsters have 9%-17% chance to contain 1-2 pennies#{{Player33}} When playing as Tainted Keeper monsters have 7%-13% chance to contain 1 penny#!!! The pennies disappear after 3 seconds"
-	local KeepersRopeDescRu = "Даёт полёт#{{Coin}} Когда монстры появляются у них есть 14%-25% шанс иметь 1-3 монет, которые выпадают при нанесении им урона#{{Player14}} При игре за Хранителя у монстров есть 9%-17% шанс иметь 1-2 монеты#{{Player33}} При игре за Порченого Хранителя у монстров есть 7%-13% шанс иметь 1 монету#!!! Монеты исчезают через 3 секунды"
-	local KeepersRopeDescSpa = "Puedes volar#{{Coin}} Cuando se generen los enemigos, tendrán un 14%-25% de tener 1-3 monedas#Las puedes obtener al hacerles daño#{{Player14}} Con Keeper los enemigos tendrán 9%-17% de tener 1-2 monedas#{{Player33}} Con Keeper Contaminado los enemigos tendrán un 7%-13% de tener 1 moneda#!!! Las monedas desaparecen después de 3 segundos"
+	local KeepersRopeDescEng = "Grants flight#{{Coin}} When monsters spawn they have a 25% chance to contain 1-3 pennies which can extracted by damaging them#{{Player14}} When playing as Keeper monsters have 16.7% chance to contain 1-2 pennies#{{Player33}} When playing as Tainted Keeper monsters have 12.5% chance to contain 1 penny#!!! The pennies disappear after 3 seconds"
+	local KeepersRopeDescRu = "Даёт полёт#{{Coin}} Когда монстры появляются у них есть 25% шанс иметь 1-3 монет, которые выпадают при нанесении им урона#{{Player14}} При игре за Хранителя у монстров есть 16.7% шанс иметь 1-2 монеты#{{Player33}} При игре за Порченого Хранителя у монстров есть 12.5% шанс иметь 1 монету#!!! Монеты исчезают через 3 секунды"
+	local KeepersRopeDescSpa = "Puedes volar#{{Coin}} Cuando se generen los enemigos, tendrán un 25% de tener 1-3 monedas#Las puedes obtener al hacerles daño#{{Player14}} Con Keeper los enemigos tendrán 16.7% de tener 1-2 monedas#{{Player33}} Con Keeper Contaminado los enemigos tendrán un 12.5% de tener 1 moneda#!!! Las monedas desaparecen después de 3 segundos"
     EID:addCollectible(CollectibleType.COLLECTIBLE_KEEPERS_ROPE, KeepersRopeDescEng, "Keeper's Rope")
     EID:addCollectible(CollectibleType.COLLECTIBLE_KEEPERS_ROPE, KeepersRopeDescRu, "Веревка Хранителя", "ru")
 	EID:addCollectible(CollectibleType.COLLECTIBLE_KEEPERS_ROPE, KeepersRopeDescSpa, "La soga de Keeper", "spa")
@@ -26,9 +26,9 @@ local Wiki = {
     { -- Effect
       {str = "Effect", fsize = 2, clr = 3, halign = 0},
       {str = "Grants flight."},
-      {str = "When monsters spawn they have a 14%-25% chance to contain 1-3 pennies."},
-      {str = "When playing as Keeper monsters have 9%-17% chance to contain 1-2 pennies."},
-      {str = "When playing as Tainted Keeper monsters have 7%-13% chance to contain 1 penny."},
+      {str = "When monsters spawn they have a 25% chance to contain 1-3 pennies."},
+      {str = "When playing as Keeper monsters have 16.7% chance to contain 1-2 pennies."},
+      {str = "When playing as Tainted Keeper monsters have 12.5% chance to contain 1 penny."},
       {str = "The pennies can be extracted by inflicting damage on the monsters."},
       {str = "The pennies disappear after 3 seconds."},
     },
