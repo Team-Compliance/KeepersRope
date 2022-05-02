@@ -165,7 +165,13 @@ end
 mod:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, mod.RopeUpdate, KeepersRope.Variant)
 
 local function DontGiveCoins(npc)
-	if npc.Type >= 950 and npc.Type < 1000 then
+	if npc.SpawnerEntity ~= nil or game:GetLevel():GetAbsoluteStage() == LevelStage.STAGE8 then
+		return true
+	end
+	if not npc:IsVulnerableEnemy() then
+		return true
+	end
+	if npc:HasEntityFlags(EntityFlag.FLAG_NO_STATUS_EFFECTS) or npc:HasEntityFlags(EntityFlag.FLAG_FRIENDLY) or npc:HasEntityFlags(EntityFlag.FLAG_PERSISTENT) then
 		return true
 	end
 	for _,entity in pairs(NoCoinList) do
@@ -183,10 +189,10 @@ local function DontGiveCoins(npc)
 end
 
 function mod:HereComesTheMoney(npc)
-	if npc.SpawnerEntity ~= nil or game:GetLevel():GetAbsoluteStage() == LevelStage.STAGE8 or DontGiveCoins(npc) then return end
+	if DontGiveCoins(npc) then return end
 	local room = game:GetRoom()
 	local rng = RNG()
-	rng:SetSeed(room:GetDecorationSeed() + npc.InitSeed,35)
+	rng:SetSeed(npc.InitSeed, 35)
 	for _, e in ipairs(Isaac.FindByType(EntityType.ENTITY_PLAYER)) do
 		local player = e:ToPlayer()
 		if player:HasCollectible(CollectibleType.COLLECTIBLE_KEEPERS_ROPE) then
@@ -194,7 +200,7 @@ function mod:HereComesTheMoney(npc)
 			local isTaintedKeeper = player:GetPlayerType() == PlayerType.PLAYER_KEEPER_B
 			local chance = isTaintedKeeper and 8 or (isKeeper and 6 or 4)
 			local coins = isTaintedKeeper and 1 or (isKeeper and 2 or 3)
-			if npc:IsEnemy() and npc:IsVulnerableEnemy() and npc:IsActiveEnemy(false) and rng:RandomInt(chance + npc.InitSeed % chance) == 1 then
+			if rng:RandomInt(chance) == 1 then
 				local entityData = piberFuncs.GetData(npc)
 				local mul = npc:IsBoss() and 2 or 1
 				entityData.CoinsToBeat = (rng:RandomInt(coins + 1)) * mul
