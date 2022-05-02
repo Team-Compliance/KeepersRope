@@ -238,12 +238,13 @@ mod:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, mod.MoneyMoneyMoneyMoney)
 
 function mod:MoneyMoneyMoneyMoneyMoney(npc)
 	local data = piberFuncs.GetData(npc)
+	if Game():GetRoom():GetRenderMode() == RenderMode.RENDER_WATER_REFLECT then return end
 	if data.CoinsToBeat and data.CoinsToBeat > 0 and npc.Visible then
 		local color = Color(1,1,1,1)
 		color:SetColorize(1,0.5,0,0.6)
 		npc:GetSprite().Color = color
 		coinIndicator:Render((Isaac.WorldToScreen(npc.Position) + Vector(0,-2.3)*(npc.Size <20 and npc.Size or 20) ),Vector.Zero,Vector.Zero)
-		coinIndicator.Color = Color(1,1,1,0.2)
+		coinIndicator.Color = Color(1,1,1,0.5)
 	end
 end
 mod:AddCallback(ModCallbacks.MC_POST_NPC_RENDER, mod.MoneyMoneyMoneyMoneyMoney)
