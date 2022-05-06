@@ -289,7 +289,7 @@ function mod:NoSoap(player,cacheFlag)
 	if player:HasCollectible(CollectibleType.COLLECTIBLE_KEEPERS_ROPE) then
 		if cacheFlag == CacheFlag.CACHE_FLYING then
 			player.CanFly = true
-		elseif cacheFlag == CacheFlag.CACHE_LUCK then
+		elseif cacheFlag == CacheFlag.CACHE_LUCK and player:GetPlayerType() ~= PlayerType.PLAYER_KEEPER and player:GetPlayerType() ~= PlayerType.PLAYER_KEEPER_B then
 			player.Luck = player.Luck - 2
 		end
 	end
