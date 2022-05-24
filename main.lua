@@ -312,4 +312,4 @@ function mod:RopeReplacement(pickup)
                 
     end
 end
-mod:AddCallback(ModCallbacks.MC_POST_PICKUP_UPDATE, mod.RopeReplacement, PickupVariant.PICKUP_COLLECTIBLE)
+--mod:AddCallback(ModCallbacks.MC_POST_PICKUP_UPDATE, mod.RopeReplacement, PickupVariant.PICKUP_COLLECTIBLE)
