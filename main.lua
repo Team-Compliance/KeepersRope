@@ -1,6 +1,7 @@
 local mod = RegisterMod("Keeper's Rope", 1);
 local piberFuncs = require("piberFuncs")
-local game = Game();
+local game = Game()
+local morphed = false
 CollectibleType.COLLECTIBLE_KEEPERS_ROPE = Isaac.GetItemIdByName("Keeper's Rope")
 local KeepersRope = {Id = Isaac.GetEntityTypeByName("Hanging rope"), Variant = Isaac.GetEntityVariantByName("Hanging rope")}
 local coinIndicator = Sprite()
@@ -296,20 +297,40 @@ function mod:NoSoap(player,cacheFlag)
 end
 mod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, mod.NoSoap)
 
-function mod:RopeReplacement(pickup)
-    if pickup.FrameCount < 2 and pickup.FrameCount < Game():GetRoom():GetFrameCount() and
-	(pickup.SubType == CollectibleType.COLLECTIBLE_STEAM_SALE or pickup.SubType == CollectibleType.COLLECTIBLE_HEAD_OF_THE_KEEPER) then
-        local pickData = piberFuncs.GetData(pickup)
-
-        if not pickData.RNG then
-            pickData.RNG = RNG()
-            pickData.RNG:SetSeed(pickup.InitSeed, 35)
-        end
-
-		if pickData.RNG:RandomInt(3) == 0 and pickup.SubType ~= CollectibleType.COLLECTIBLE_KEEPERS_ROPE then
-			pickup:Morph(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, CollectibleType.COLLECTIBLE_KEEPERS_ROPE, true, true, false)
+function mod:RopeReplacement(keeper)
+	if not morphed then
+		for __,pickup in ipairs(Isaac.FindByType(5,100)) do
+			pickup = pickup:ToPickup()
+			if (pickup.Position - keeper.Position):Length() <= 10 and pickup.FrameCount == 0 and
+			(pickup.SubType == CollectibleType.COLLECTIBLE_STEAM_SALE or pickup.SubType == CollectibleType.COLLECTIBLE_HEAD_OF_THE_KEEPER
+			or pickup.SubType == CollectibleType.COLLECTIBLE_COUPON) then
+				local pickData = piberFuncs.GetData(pickup)
+				if not pickData.RNG then
+					pickData.RNG = RNG()
+					pickData.RNG:SetSeed(pickup.InitSeed, 35)
+				end
+				if pickData.RNG:RandomInt(3) == 0 and pickup.SubType ~= CollectibleType.COLLECTIBLE_KEEPERS_ROPE then
+					pickup:Morph(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, CollectibleType.COLLECTIBLE_KEEPERS_ROPE, true, true, false)
+					morphed = true
+					break
+				end		
+			end
 		end
-                
-    end
+	end
 end
---mod:AddCallback(ModCallbacks.MC_POST_PICKUP_UPDATE, mod.RopeReplacement, PickupVariant.PICKUP_COLLECTIBLE)
+mod:AddCallback(ModCallbacks.MC_POST_NPC_DEATH, mod.RopeReplacement, EntityType.ENTITY_SHOPKEEPER)
+
+function mod:Save(isSaving)
+	if isSaving then
+		mod:SaveData(tostring(morphed))
+	end
+end
+mod:AddCallback(ModCallbacks.MC_PRE_GAME_EXIT, mod.Save)
+
+function mod:Load(isLoading)
+	morphed = false
+	if isLoading and mod:HasData() then
+		morphed = mod:LoadData() == "true" and true or false
+	end
+end
+mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, mod.Load)
