@@ -124,8 +124,14 @@ end
 
 function mod:Rope(player)
 	local BeastFight = game:GetLevel():GetAbsoluteStage() == LevelStage.STAGE8 and game:GetRoom():GetType() == RoomType.ROOM_DUNGEON
-	if not BeastFight and not player:IsDead() then
-		if player:HasCollectible(CollectibleType.COLLECTIBLE_KEEPERS_ROPE) then
+	if not morphed then
+		for _,pickup in ipairs(Isaac.FindByType(5,100,CollectibleType.COLLECTIBLE_KEEPERS_ROPE)) do
+			morphed = true
+		end
+	end
+	if player:HasCollectible(CollectibleType.COLLECTIBLE_KEEPERS_ROPE) then	
+		morphed = true
+		if not BeastFight and not player:IsDead() then
 			if not GetRope(player, true) then
 				Isaac.Spawn(KeepersRope.Id, KeepersRope.Variant, 0, player.Position, Vector.Zero, player)
 			else
@@ -311,7 +317,6 @@ function mod:RopeReplacement(keeper)
 				end
 				if pickData.RNG:RandomInt(3) == 0 and pickup.SubType ~= CollectibleType.COLLECTIBLE_KEEPERS_ROPE then
 					pickup:Morph(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, CollectibleType.COLLECTIBLE_KEEPERS_ROPE, true, true, false)
-					morphed = true
 					break
 				end		
 			end
