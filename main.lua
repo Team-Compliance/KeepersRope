@@ -238,7 +238,7 @@ function mod:MoneyMoneyMoneyMoney(entity, _, damageflags, source)
 					if player:HasCollectible(CollectibleType.COLLECTIBLE_MR_BOOM) and ropeRNG:RandomInt(3) == 0 then
 						pickup = {Variant = PickupVariant.PICKUP_BOMB, SubType = BombSubType.BOMB_NORMAL}
 					end
-					Isaac.Spawn(EntityType.ENTITY_PICKUP, pickup.Variant, pickup.SubType, entity.Position, vector, nil):ToPickup().Timeout = 90
+					Isaac.Spawn(EntityType.ENTITY_PICKUP, pickup.Variant, pickup.SubType, entity.Position, vector, nil):ToPickup().Timeout = 60
 					data.CoinsToBeat = data.CoinsToBeat - 1
 				end
 			end
